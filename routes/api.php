@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/', function () {
+//     return view('welcome');
+});
+
+Route::post('register', [UserController::class, 'register'])->name('api.register');
+Route::post('login', [UserController::class, 'login'])->name('api.login');
+  
+Route::group(['middleware' => 'jwt.verify'], function () {
+    Route::get('user', [UserController::class, 'getAuthenticatedUser'])->name('api.info');
+    Route::post('logout', [UserController::class, 'logout'])->name('api.logout');
+  
 });
