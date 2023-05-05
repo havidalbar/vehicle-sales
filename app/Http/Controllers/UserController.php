@@ -6,20 +6,23 @@ use JWTAuth;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Repositories\UserRepository;
 use App\Http\Requests\UserRequest;
+use App\Http\Repositories\UserRepositoryInterface;
 
 class UserController extends Controller
 {
-    public function __construct(
-        protected UserRepository $userRepository
-    ) { }
+    private $userRepository;
 
-    public $token = true;
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+    public $token = false;
      
     public function register(UserRequest $request)
     {
-        $user = $this->userRepository->create($request);
+        $user = $this->userRepository->create($request->all());
         
         if ($this->token) {
             return $this->login($request);

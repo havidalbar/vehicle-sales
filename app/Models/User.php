@@ -19,6 +19,10 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
     ];
+    
+    public function setPasswordAttribute($value){
+        $this->attributes['password'] = bcrypt($value);
+    }
 
     public function getJWTIdentifier()
     {
