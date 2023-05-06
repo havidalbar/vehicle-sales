@@ -35,14 +35,14 @@ class BaseRepository implements EloquentRepositoryInterface
     /**
      * Find model by id.
      *
-     * @param int $modelId
+     * @param string $modelId
      * @param array $columns
      * @param array $relations
      * @param array $appends
      * @return Model
      */
     public function findById(
-        int $modelId,
+        string $modelId,
         array $columns = ['*'],
         array $relations = [],
         array $appends = []

@@ -31,6 +31,11 @@ class VehicleRequest extends FormRequest
      */
     public function rules()
     {
+        if ($this->request->get('vehicle_type') == NULL)
+        {
+            throw new HttpResponseException(response('vehicle_type is required', Response::HTTP_UNPROCESSABLE_ENTITY));
+        }
+
         $vehicle_type = $this->request->get('vehicle_type');
         switch (strtolower($vehicle_type)) {
             case "car":

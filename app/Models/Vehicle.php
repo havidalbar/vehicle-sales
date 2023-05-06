@@ -5,6 +5,7 @@ namespace App\Models;
 use Jenssegers\Mongodb\Eloquent\Model;
 use App\Models\User;
 use App\Models\Car;
+use App\Models\Sales;
 use App\Models\Motorcycle;
 
 class Vehicle extends Model
@@ -17,7 +18,7 @@ class Vehicle extends Model
     ];
 
     protected $hidden = [
-        'vehicle_type',
+        'vehicle_type'
     ];
 
     public static function boot()
@@ -37,21 +38,6 @@ class Vehicle extends Model
         });
     }
 
-    protected $appends = [
-        'remaining_cars_quota',
-        'remaining_motorcycle_quota'
-    ];
-
-    public function getRemainingCarsQuotaAttribute()
-    {
-        return Car::where('vehicle_type', Car::class)->count();
-    }
-
-    public function getRemainingMotorcycleQuotaAttribute()
-    {
-        return Motorcycle::where('vehicle_type', Motorcycle::class)->count();
-    }
-
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -65,6 +51,11 @@ class Vehicle extends Model
     public function motorcycle()
     {
         return $this->hasOne(Motorcycle::class); 
+    }
+
+    public function sales()
+    {
+        return $this->belongsTo(Sales::class);
     }
 
 }

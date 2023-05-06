@@ -24,6 +24,12 @@ class User extends Authenticatable implements JWTSubject
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function vehicle()
+    {
+        return $this->hasMany(Vehicle::class); 
+    }
+
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
