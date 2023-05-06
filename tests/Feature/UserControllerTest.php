@@ -16,6 +16,22 @@ class UserControllerTest extends TestCase
      *
      * @return void
      */
+    protected function authenticate(){
+        $data = [
+            'name' => 'test',
+            'email' => 'test@gmail.com',
+            'password' => '123456',
+        ];
+        
+        $responseRegister = $this->json('POST', route('api.register'), $data);
+        
+        $responseRegister->assertStatus(200);
+
+        $this->assertArrayHasKey('data', $responseRegister->json());
+        $user = User::where('email','test@gmail.com')->first();
+        $token = JWTAuth::fromUser($user);
+        return $token;
+    }
 
     public function test_register()
     {
@@ -36,18 +52,7 @@ class UserControllerTest extends TestCase
 
     public function test_login()
     {
-        $data = [
-            'name' => 'test',
-            'email' => 'test@gmail.com',
-            'password' => '123456',
-        ];
-
-        $responseRegister = $this->json('POST', route('api.register'), $data);
-        
-        $responseRegister->assertStatus(200);
-
-        $this->assertArrayHasKey('data', $responseRegister->json());
-        
+        $token = $this->authenticate();
 
         $responseLogin = $this->json('POST', route('api.login'),
         [
@@ -63,30 +68,7 @@ class UserControllerTest extends TestCase
     
     public function test_logout()
     {
-        $data = [
-            'name' => 'test',
-            'email' => 'test@gmail.com',
-            'password' => '123456',
-        ];
-        
-        $responseRegister = $this->json('POST', route('api.register'), $data);
-        
-        $responseRegister->assertStatus(200);
-
-        $this->assertArrayHasKey('data', $responseRegister->json());
-        
-
-        $responseLogin = $this->json('POST', route('api.login'),
-        [
-            'email' => 'test@gmail.com',
-            'password' => '123456',
-        ]);
-        
-        $responseLogin->assertStatus(200);
-        $this->assertArrayHasKey('token', $responseLogin->json());
-        
-        $user = User::where('email','test@gmail.com')->first();
-        $token = JWTAuth::fromUser($user);
+        $token = $this->authenticate();
 
         $this->json('POST', route('api.logout'),
         [
@@ -98,30 +80,7 @@ class UserControllerTest extends TestCase
 
     public function test_get_info_user()
     {
-        $data = [
-            'name' => 'test',
-            'email' => 'test@gmail.com',
-            'password' => '123456',
-        ];
-        
-        $responseRegister = $this->json('POST', route('api.register'), $data);
-        
-        $responseRegister->assertStatus(200);
-
-        $this->assertArrayHasKey('data', $responseRegister->json());
-        
-
-        $responseLogin = $this->json('POST', route('api.login'),
-        [
-            'email' => 'test@gmail.com',
-            'password' => '123456',
-        ]);
-        
-        $responseLogin->assertStatus(200);
-        $this->assertArrayHasKey('token', $responseLogin->json());
-        
-        $user = User::where('email','test@gmail.com')->first();
-        $token = JWTAuth::fromUser($user);
+        $token = $this->authenticate();
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '. $token,

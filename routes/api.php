@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,5 +27,9 @@ Route::post('login', [UserController::class, 'login'])->name('api.login');
 Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('user', [UserController::class, 'getAuthenticatedUser'])->name('api.info');
     Route::post('logout', [UserController::class, 'logout'])->name('api.logout');
+
+    Route::post('vehicle', [VehicleController::class, 'registerVehicle'])->name('api.vehicle');
+    Route::get('quota-vehicle', [VehicleController::class, 'getQuotaVehicle'])->name('api.quota.vehicle');
+
   
 });
