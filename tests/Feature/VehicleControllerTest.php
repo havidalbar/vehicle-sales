@@ -54,8 +54,8 @@ class VehicleControllerTest extends TestCase
         $response->assertStatus(200);
         $this->assertArrayHasKey('data', $response->json());
 
-        User::where('email', 'test@gmail.com')->delete();
-        Vehicle::where('_id',$response->json()['data']['_id'])->delete();
+        User::where('email', 'test@gmail.com')->first()->delete();
+        Motorcycle::where('_id',$response->json()['data']['_id'])->first()->delete();
     }
 
     public function test_create_car()
@@ -76,8 +76,8 @@ class VehicleControllerTest extends TestCase
         $response->assertStatus(200);
         $this->assertArrayHasKey('data', $response->json());
 
-        User::where('email', 'test@gmail.com')->delete();
-        Vehicle::where('_id',$response->json()['data']['_id'])->delete();
+        User::where('email', 'test@gmail.com')->first()->delete();
+        Car::where('_id', $response->json()['data']['_id'])->first()->delete();
     }
 
     public function test_get_quota_vehicle()
@@ -92,6 +92,50 @@ class VehicleControllerTest extends TestCase
         $this->assertArrayHasKey('car', $response->json()['data']);
         $this->assertArrayHasKey('motorcycle', $response->json()['data']);
 
-        User::where('email', 'test@gmail.com')->delete();
+        User::where('email', 'test@gmail.com')->first()->delete();
+    }
+
+    public function test_get_leftover_quota_vehicle()
+    {
+        $token = $this->authenticate();
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $token,
+        ])->get(route('api.leftover.quota.vehicle'));
+        $response->assertStatus(200);
+        $this->assertArrayHasKey('data', $response->json());
+        $this->assertArrayHasKey('car', $response->json()['data']);
+        $this->assertArrayHasKey('motorcycle', $response->json()['data']);
+
+        User::where('email', 'test@gmail.com')->first()->delete();
+    }
+
+    public function test_get_vehicle_by_id()
+    {
+        $token = $this->authenticate();
+
+        $responseVehicle = $this->withHeaders([
+            'Authorization' => 'Bearer '. $token,
+        ])->json('POST',route('api.vehicle'),[
+                    'year_release' => '2002',   
+                    'color' => 'Blue',
+                    'price' => '100',
+                    'passenger_capacity' => '4',   
+                    'type' => 'i8',
+                    'engine' => 'AT',
+                    'vehicle_type' => 'car'
+        ]);
+        $responseVehicle->assertStatus(200);
+        $this->assertArrayHasKey('data', $responseVehicle->json());
+        $idVehicle = $responseVehicle->json()['data']['_id'];
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer '. $token,
+        ])->get(route('api.vehicle.id',['id' => $idVehicle]));
+        $response->assertStatus(200);
+        $this->assertArrayHasKey('data', $response->json());
+        $this->assertArrayHasKey('_id', $response->json()['data']);
+
+        User::where('email', 'test@gmail.com')->first()->delete();
+        Car::where('_id',$idVehicle)->first()->delete();
     }
 }

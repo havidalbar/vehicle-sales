@@ -1,3 +1,36 @@
+# Prerequisite
+For prerequisites customize the install method according to the operating system used. 
+Here I use the Apple M1 operating system.
+### 1. PHP
+Type the command in terminal:
+- brew tap shivammathur/php
+- brew install php@8.2.5
+- brew link --overwrite --force php@8.2.5
+### 2. Composer 
+- Follow the instructions at https://getcomposer.org/download/ to download and install Composer.
+### 3. MongoDB
+- Type the command in terminal: "sudo pecl install mongodb"
+- Edit the php.ini file on the operating system and comment out the line:
+extension="mongodb.so"
+
+
+# Setup Project Laravel with MongoDB
+1. I use MongoDB Atlas, before that we have to register for a MongoDB Atlas account here https://account.mongodb.com/account/login
+2. Clone this repository, then type the command in the terminal: "composer install"
+3. Make .env based on .env.example
+4. Generate app_key using command "php artisan key:generate"
+5. generate jwt_secrete using command "php artisan jwt:secret"
+6. Setting MongoDB config on .env, add this line in .env:
+-- DB_CONNECTION=mongodb
+-- DB_DSN=""
+-- DB_DATABASE=test
+customize the DB_DSN with your Atlas
+7. Ready to launch with "php artisan serve"
+8. This is an image of the routing list:
+![alt text](https://github.com/havidalbar/vehicle-sales/blob/b1f0a74c68fd4885a8d1634dd530dc6745540a6b/list%20route.png?raw=true)
+
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
