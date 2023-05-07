@@ -21,9 +21,9 @@ extension="mongodb.so"
 4. Generate app_key using command "php artisan key:generate"
 5. generate jwt_secrete using command "php artisan jwt:secret"
 6. Setting MongoDB config on .env, add this line in .env:
--- DB_CONNECTION=mongodb
--- DB_DSN=""
--- DB_DATABASE=test
+- DB_CONNECTION=mongodb
+- DB_DSN=""
+- DB_DATABASE=test
 customize the DB_DSN with your Atlas
 7. Ready to launch with "php artisan serve"
 8. This is an image of the routing list:
